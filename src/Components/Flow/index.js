@@ -1,10 +1,12 @@
 import React from 'react';
 import Edge from './Edge';
-import { NormalNode } from './Node';
+import { NormalNode, IfElseNode, AnswerNode } from './Node';
 import ReactFlow, { removeElements, addEdge } from 'react-flow-renderer';
 
 const nodeTypes = {
   normal: NormalNode,
+  ifElse: IfElseNode,
+  answer:AnswerNode,
 };
 
 const edgeTypes = {
