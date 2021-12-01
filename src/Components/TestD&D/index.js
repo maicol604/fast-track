@@ -1,8 +1,12 @@
-import React from 'react';
-import Edge from './Edge';
-import { NormalNode, IfElseNode, AnswerNode } from './Node';
-import ReactFlow, { removeElements, addEdge, ReactFlowProvider, Controls } from 'react-flow-renderer';
+import React, { useState, useRef } from 'react';
+import ReactFlow, {
+  ReactFlowProvider,
+  addEdge,
+  removeElements,
+  Controls,
+} from 'react-flow-renderer';
 
+import { NormalNode, IfElseNode, AnswerNode } from '../Flow/Node';
 import Sidebar from '../Sidebar';
 
 const nodeTypes = {
@@ -11,8 +15,25 @@ const nodeTypes = {
   answer:AnswerNode,
 };
 
-const edgeTypes = {
-  custom: Edge,
+const Sidebar = () => {
+    const onDragStart = (event, nodeType) => {
+        event.dataTransfer.setData('application/reactflow', nodeType);
+        event.dataTransfer.effectAllowed = 'move';
+    };
+  
+    return (
+      <aside>
+            <div className="dndnode input" onDragStart={(event) => onDragStart(event, 'ifElse')} draggable>
+                Input Node
+            </div>
+            <div className="dndnode" onDragStart={(event) => onDragStart(event, 'ifElse')} draggable>
+                Default Node
+            </div>
+            <div className="dndnode output" onDragStart={(event) => onDragStart(event, 'ifElse')} draggable>
+                Output Node
+            </div>
+      </aside>
+    );
 };
 
 const initialElements = [
@@ -21,12 +42,12 @@ const initialElements = [
 let id = 0;
 const getId = () => `dndnode_${id++}`;
 
-export default () => {
-  const reactFlowWrapper = React.useRef(null);
-  const [reactFlowInstance, setReactFlowInstance] = React.useState(null);
+const DnDFlow = () => {
+  const reactFlowWrapper = useRef(null);
+  const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
   
-  const [elements, setElements] = React.useState(initialElements);
+  const [elements, setElements] = useState(initialElements);
 
 
   const onConnect = (params) => setElements((els) => addEdge(params, els));
@@ -55,10 +76,8 @@ export default () => {
       id: getId(),
       type,
       position,
-      data: { title:'Titulo de la pregunta', id:elements.length+1, answers:[{text:'Respuesta 1'}, {text:'Respuesta 1'}] },
-      dragHandle: '.drag-handle',
-      animated: true,
-      style: { stroke: 'red' },
+      data: { title:'Titulo de la pregunta si/no', id:elements.length+1, answers:[{text:'Respuesta 1'}, {text:'Respuesta 1'}] },
+      dragHandle: '.drag-handle'
     };
 
     setElements((es) => es.concat(newNode));
@@ -69,8 +88,7 @@ export default () => {
       <ReactFlowProvider>
         <div className="reactflow-wrapper" ref={reactFlowWrapper}  style={{ height: '100vh', backgroundColor: '#f0f0f0' }}>
           <ReactFlow
-            nodeTypes={nodeTypes} 
-            edgeTypes={edgeTypes} 
+            nodeTypes={nodeTypes}  
             elements={elements}
             onConnect={onConnect}
             onElementsRemove={onElementsRemove}
@@ -78,7 +96,7 @@ export default () => {
             onDrop={onDrop}
             onDragOver={onDragOver}
           >
-            <Controls/>
+            <Controls />
           </ReactFlow>
         </div>
         <Sidebar />

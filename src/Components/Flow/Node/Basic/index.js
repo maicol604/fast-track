@@ -106,6 +106,7 @@ const NodeWrapper = styled.div`
                 border: 3px solid #fff;
                 color: #fff;
                 font-size: 1em;
+                text-align: center;
             }
         }
     }
