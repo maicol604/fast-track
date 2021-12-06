@@ -1,6 +1,7 @@
 import React from 'react';
 import { Handle } from 'react-flow-renderer';
 import styled from 'styled-components';
+import Tooltip from '@mui/material/Tooltip';
 
 import Modal from '../../../Modal';
 
@@ -173,24 +174,26 @@ export default ({ data }) => {
 
     return (
         <NodeWrapper onDoubleClick={handleOpen}>
-            <div className='test'>
-                <span className="drag-handle">
-                    <div className='handle'>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-grip-vertical drawer-icon" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                            <circle cx="9" cy="5" r="1" />
-                            <circle cx="9" cy="12" r="1" />
-                            <circle cx="9" cy="19" r="1" />
-                            <circle cx="15" cy="5" r="1" />
-                            <circle cx="15" cy="12" r="1" />
-                            <circle cx="15" cy="19" r="1" />
-                        </svg>
-                    </div>
-                    <div>
-                        {data.title}
-                    </div>
-                </span>
-            </div>
+            <Tooltip title="Doble click para editar" placement="top">
+                <div className='test'>
+                    <span className="drag-handle">
+                        <div className='handle'>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-grip-vertical drawer-icon" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                <circle cx="9" cy="5" r="1" />
+                                <circle cx="9" cy="12" r="1" />
+                                <circle cx="9" cy="19" r="1" />
+                                <circle cx="15" cy="5" r="1" />
+                                <circle cx="15" cy="12" r="1" />
+                                <circle cx="15" cy="19" r="1" />
+                            </svg>
+                        </div>
+                        <div>
+                            {data.title}
+                        </div>
+                    </span>
+                </div>
+            </Tooltip>
             <div className='handle-in-container'>
                 <Handle 
                     type="target" 

@@ -7,10 +7,9 @@ function App() {
   return (
     <div className="App">
       <Flow
-        //initialElements={JSON.parse(JSON.stringify(elements))}
+      
       />
     </div>
-    /*<DnDFlow/>*/
   );
 }
 
