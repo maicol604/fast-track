@@ -2,6 +2,8 @@ import React from 'react';
 import { Handle } from 'react-flow-renderer';
 import styled from 'styled-components';
 
+import Modal from '../../../Modal';
+
 const primaryColor = '#15295c';
 const drawerColor = "#b3b3b3";
 
@@ -16,11 +18,14 @@ const NodeWrapper = styled.div`
     .drag-handle{
         cursor: move;
         display: flex;
-        border-bottom: 1px solid  ${primaryColor};
+        //border-bottom: 1px solid  ${primaryColor};
         padding: .25em .75em;
         color: #fff;
-        background-color: ${primaryColor};
+        background-color: #9b59b6;
         border-radius: .2em .2em 0 0;
+        .drawer-icon{
+            stroke:#fff;
+        }
         .handle{
             display: flex;
             align-items: center;
@@ -156,60 +161,79 @@ const NodeWrapper = styled.div`
 
 export default ({ data }) => {
 
+    const [open, setOpen] = React.useState(false);
+
+    const handleOpen = () => {
+        setOpen(true);
+    }
+
+    const handleClose = () => {
+        setOpen(false);
+    }
+
     return (
-      <NodeWrapper>
-        <div className='test'>
-            <span className="drag-handle">
-                <div className='handle'>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-grip-vertical drawer-icon" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                        <circle cx="9" cy="5" r="1" />
-                        <circle cx="9" cy="12" r="1" />
-                        <circle cx="9" cy="19" r="1" />
-                        <circle cx="15" cy="5" r="1" />
-                        <circle cx="15" cy="12" r="1" />
-                        <circle cx="15" cy="19" r="1" />
-                    </svg>
-                </div>
+        <NodeWrapper onDoubleClick={handleOpen}>
+            <div className='test'>
+                <span className="drag-handle">
+                    <div className='handle'>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-grip-vertical drawer-icon" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <circle cx="9" cy="5" r="1" />
+                            <circle cx="9" cy="12" r="1" />
+                            <circle cx="9" cy="19" r="1" />
+                            <circle cx="15" cy="5" r="1" />
+                            <circle cx="15" cy="12" r="1" />
+                            <circle cx="15" cy="19" r="1" />
+                        </svg>
+                    </div>
+                    <div>
+                        {data.title}
+                    </div>
+                </span>
+            </div>
+            <div className='handle-in-container'>
+                <Handle 
+                    type="target" 
+                    position="left" 
+                    id={`in-${data.id}`} 
+                    className={'in-handle'} 
+                />
+            </div>
+            <ul className={'answers'}>
+                {data.answers.map((item, index)=>{
+                    return (
+                        <li key={index} className={'answer'}>
+                            {item.text}
+                            <div className={'count-circle'}>
+                                {index+1}
+                            </div>
+                        </li>
+                    )
+                })}
+            </ul>
+            <div className='handle-out-container'>
+                <Handle
+                    type="source"
+                    position="right"
+                    id={`out-if-${data.id}`}
+                    className={'out-handle-if'} 
+                />
+                <Handle
+                    type="source"
+                    position="right"
+                    id={`out-else-${data.id}`}
+                    className={'out-handle-else'} 
+                />
+            </div>
+            
+            <Modal
+                open={open}
+                onClose={handleClose}
+            >
                 <div>
-                    {data.title}
+                    Configurar Preguntas y condiciones
                 </div>
-            </span>
-        </div>
-        <div className='handle-in-container'>
-            <Handle 
-                type="target" 
-                position="left" 
-                id={`in-${data.id}`} 
-                className={'in-handle'} 
-            />
-        </div>
-        <ul className={'answers'}>
-            {data.answers.map((item, index)=>{
-                return (
-                    <li key={index} className={'answer'}>
-                        {item.text}
-                        <div className={'count-circle'}>
-                            {index+1}
-                        </div>
-                    </li>
-                )
-            })}
-        </ul>
-        <div className='handle-out-container'>
-            <Handle
-                type="source"
-                position="right"
-                id={`out-if-${data.id}`}
-                className={'out-handle-if'} 
-            />
-            <Handle
-                type="source"
-                position="right"
-                id={`out-else-${data.id}`}
-                className={'out-handle-else'} 
-            />
-        </div>
-      </NodeWrapper>
+            </Modal>
+        </NodeWrapper>
     );
 };

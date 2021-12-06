@@ -81,7 +81,25 @@ export default () => {
             <Controls/>
           </ReactFlow>
         </div>
-        <Sidebar />
+        <Sidebar 
+          nodes={[
+            {
+              name:'Nodo normal',
+              color:'#e67e22',
+              type:'normal'
+            },
+            {
+              name:'Nodo Si/No',
+              color:'#9b59b6',
+              type:'ifElse'
+            },
+            {
+              name:'Nodo respuesta',
+              color:'#3498db',
+              type:'answer'
+            }
+          ]}
+        />
       </ReactFlowProvider>
     </div>
   );

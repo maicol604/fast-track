@@ -2,6 +2,8 @@ import React from 'react';
 import { Handle } from 'react-flow-renderer';
 import styled from 'styled-components';
 
+import Modal from '../../../Modal';
+
 const primaryColor = '#15295c';
 const drawerColor = "#b3b3b3";
 
@@ -17,16 +19,20 @@ const NodeWrapper = styled.div`
     .drag-handle{
         cursor: move;
         display: flex;
-        border-bottom: 1px solid  ${primaryColor};
+        //border-bottom: 1px solid  ${primaryColor};
         padding: .25em .75em;
         color: #fff;
-        background-color: ${primaryColor};
+        background-color: #3498db;
         border-radius: .2em .2em 0 0;
+        .drawer-icon{
+            stroke:#fff;
+        }
         .handle{
             display: flex;
             align-items: center;
             width: max-content;
             margin-right: .25em;
+            stroke:red;
         }
         &:hover{
             .drawer-icon{
@@ -154,8 +160,22 @@ const NodeWrapper = styled.div`
 
 export default ({ data, variant='' }) => {
 
+    const [state, setState] = React.useState({
+
+    });
+
+    const [open, setOpen] = React.useState(false);
+
+    const handleOpen = () => {
+        setOpen(true);
+    }
+    
+    const handleClose = () => {
+        setOpen(false);
+    }
+
     return (
-      <NodeWrapper>
+      <NodeWrapper onDoubleClick={handleOpen}>
         <div className='test'>
             <span className="drag-handle">
                 <div className='handle'>
@@ -183,7 +203,7 @@ export default ({ data, variant='' }) => {
             />
         </div>
         <ul className={'answers'}>
-            {data.answers.map((item, index)=>{
+            {[].map((item, index)=>{
                 return (
                     <li key={index} className={'answer'}>
                         {item.text}
@@ -201,7 +221,21 @@ export default ({ data, variant='' }) => {
                     </li>
                 )
             })}
+            {
+                [].length===0 && 
+                <div
+                    style={{height:'1em'}}
+                ></div>
+            }
         </ul>
+        <Modal
+            open={open}
+            onClose={handleClose}
+        >
+            <div>
+                Configurar Preguntas y condiciones
+            </div>
+        </Modal>
       </NodeWrapper>
     );
 };
