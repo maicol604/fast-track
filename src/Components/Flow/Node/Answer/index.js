@@ -2,14 +2,17 @@ import React from 'react';
 import { Handle } from 'react-flow-renderer';
 import styled from 'styled-components';
 import Tooltip from '@mui/material/Tooltip';
+import TextField from '@mui/material/TextField';
 
 import Modal from '../../../Modal';
 
 const primaryColor = '#15295c';
 const drawerColor = "#b3b3b3";
 
+const handlerColor = '#3498db';
+
 const NodeWrapper = styled.div`
-    border: 1px solid #ccc;
+    border: 2px solid #ccc;
     //border-left: 0;
     //border-right: 0;
     cursor: default;
@@ -17,13 +20,14 @@ const NodeWrapper = styled.div`
     background-color: #fff;
     //overflow: hidden;
     border-radius: .25em;
+    transition: all .5s;
     .drag-handle{
         cursor: move;
         display: flex;
         //border-bottom: 1px solid  ${primaryColor};
         padding: .25em .75em;
         color: #fff;
-        background-color: #3498db;
+        background-color: ${handlerColor};
         border-radius: .2em .2em 0 0;
         .drawer-icon{
             stroke:#fff;
@@ -156,16 +160,28 @@ const NodeWrapper = styled.div`
             }
         }
     }
+    &.active{
+        border: 2px dashed ${handlerColor};
+    }
+    .skeleton{
+        height: 1em;
+        background: #ecf0f1;
+        margin: 0 .5em .5em .5em;
+        border-radius: .25em;
+    }
 `;
 
+const initialState = {
+    title:'',
+    answers:[]
+}
 
 export default ({ data, variant='' }) => {
 
-    const [state, setState] = React.useState({
-
-    });
-
     const [open, setOpen] = React.useState(false);
+    const [selected, setSelected] = React.useState(false);
+    const [state, setState] = React.useState({...initialState});
+    const [auxState, setAuxState] = React.useState({...initialState});
 
     const handleOpen = () => {
         setOpen(true);
@@ -175,11 +191,35 @@ export default ({ data, variant='' }) => {
         setOpen(false);
     }
 
+    const handleSelection = () => {
+        setSelected(true);
+    }
+
+    let ref = React.useRef(null);
+
+    const handleClickOutside = (event) => {
+        if (ref.current && !ref.current.contains(event.target)) {
+            setSelected(false);
+        }
+    };
+
+    React.useEffect(() => {
+        document.addEventListener('click', handleClickOutside, true);
+        return () => {
+            document.removeEventListener('click', handleClickOutside, true);
+        };
+    });
+
+    const handleChange = (event) => {
+        let {name, value} = event.target;
+        setState({...state, [name]:value});
+    }
+
     return (
-        <NodeWrapper onDoubleClick={handleOpen}>
+        <NodeWrapper onDoubleClick={handleOpen} className={selected?'active':''}>
             
             <Tooltip title="Doble click para editar" placement="top">
-                <div className='test'>
+                <div className='test' onClick={handleSelection} ref={ref}>
                     <span className="drag-handle">
                         <div className='handle'>
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-grip-vertical drawer-icon" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -193,7 +233,7 @@ export default ({ data, variant='' }) => {
                             </svg>
                         </div>
                         <div>
-                            {data.title}
+                            {state.title!==''?state.title:'Pregunta sin titulo'}
                         </div>
                     </span>
                 </div>
@@ -225,19 +265,17 @@ export default ({ data, variant='' }) => {
                         </li>
                     )
                 })}
-                {
-                    [].length===0 && 
-                    <div
-                        style={{height:'1em'}}
-                    ></div>
-                }
             </ul>
+            {
+                state.answers.length===0 && 
+                <div className='skeleton'/>
+            }
             <Modal
                 open={open}
                 onClose={handleClose}
             >
                 <div>
-                    Configurar Preguntas y condiciones
+                    <TextField name="title" label="Titulo de la pregunta" variant="outlined" value={state.title} onChange={handleChange}/>
                 </div>
             </Modal>
         </NodeWrapper>
